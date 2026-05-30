@@ -385,7 +385,7 @@ class SystemRainButtons(discord.ui.View):
                                                 ends=self.ends,
                                                 message=self.message, emoji=self.emoji))
 
-async def system_rain(amount, duration):
+async def system_rain(amount, duration, host_id):
     channel = bot.get_channel(int(Config['Rains']['Channel']))
     rains.append([])
     rain = rains[-1]
