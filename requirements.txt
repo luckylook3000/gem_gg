@@ -4,4 +4,4 @@ requests
 quart
 blockcypher
 aiohttp
-timezone
+tzdata
