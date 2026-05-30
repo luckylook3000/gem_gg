@@ -3569,7 +3569,10 @@ async def rcp(interaction: discord.Interaction, code: str):
 from multiprocessing import Process
 
 def start_bot():
-    bot.run(Config['DiscordBotToken'])
+   import os
+
+def start_bot():
+    bot.run(os.getenv("TOKEN"))
 
 def start_web_server():
     app.run(debug=False, port=1161, host="0.0.0.0")
