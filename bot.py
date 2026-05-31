@@ -387,12 +387,12 @@ class SystemRainButtons(discord.ui.View):
 
 async def system_rain(amount, duration, host_id):
     channel = bot.get_channel(int(Config['Rains']['Channel']))
+
     rains.append([])
     rain = rains[-1]
-    joined = 0
-    if joined == 0:
-        joined = 1
-    emoji = "🌤️"
+
+    joined = 1
+
     if amount <= 500000000:
         emoji = "🌤️"
     elif amount <= 2000000000:
@@ -405,25 +405,65 @@ async def system_rain(amount, duration, host_id):
         emoji = "🌧️"
     else:
         emoji = "⛈"
-    embed = discord.Embed(title=f"{emoji} Rain In Progress",
-                          description=f"",
-                          color=0x3471eb)
-    embed.set_footer(text=Config['Bot Name'],
-                     icon_url=Config['Bot Icon'])
-    embed.add_field(name="",
-                    value=f":man_pouting: **Host:** <@{interaction.user.id}>\n:gem: **Amount:** {add_suffix(amount)}\n:money_mouth: **Entries:** {0}\n:gem: **Gems Per Person:** {add_suffix(amount / joined)}\n:clock1: **Ends:** <t:{round(time.time() + duration)}:R>")
-    message = await channel.send(content=".")
-    await message.edit(embed=embed,
-                       view=SystemRainButtons(amount=amount, entries=rain, ends=f"<t:{round(time.time() + duration)}:R>",
-                                             message=message, emoji=emoji))
+
+    embed = discord.Embed(
+        title=f"{emoji} Rain In Progress",
+        color=0x3471eb
+    )
+
+    embed.set_footer(
+        text=Config['Bot Name'],
+        icon_url=Config['Bot Icon']
+    )
+
+    embed.add_field(
+        name="",
+        value=(
+            f":man_pouting: **Host:** <@{host_id}>\n"
+            f":gem: **Amount:** {add_suffix(amount)}\n"
+            f":money_mouth: **Entries:** 0\n"
+            f":gem: **Gems Per Person:** {add_suffix(amount / joined)}\n"
+            f":clock1: **Ends:** <t:{round(time.time() + duration)}:R>"
+        )
+    )
+
+    message = await channel.send(".")
+
+    await message.edit(
+        embed=embed,
+        view=SystemRainButtons(
+            amount=amount,
+            entries=rain,
+            ends=f"<t:{round(time.time() + duration)}:R>",
+            message=message,
+            emoji=emoji
+        )
+    )
+
     await asyncio.sleep(duration)
-    embed = discord.Embed(title=":sunny: Rain Ended",
-                          description=f"",
-                          color=0x3471eb)
-    embed.set_footer(text=Config['Bot Name'],
-                     icon_url=Config['Bot Icon'])
-    embed.add_field(name="",
-                    value=f":man_pouting: **Host:** <@{interaction.user.id}>\n:gem: **Amount:** {add_suffix(amount)}\n:money_mouth: **Entries:** {len(rain)}\n:gem: **Gems Per Person:** {add_suffix(amount / len(rain))}")
+
+    entries = max(len(rain), 1)
+
+    embed = discord.Embed(
+        title="☀️ Rain Ended",
+        color=0x3471eb
+    )
+
+    embed.set_footer(
+        text=Config['Bot Name'],
+        icon_url=Config['Bot Icon']
+    )
+
+    embed.add_field(
+        name="",
+        value=(
+            f":man_pouting: **Host:** <@{host_id}>\n"
+            f":gem: **Amount:** {add_suffix(amount)}\n"
+            f":money_mouth: **Entries:** {len(rain)}\n"
+            f":gem: **Gems Per Person:** {add_suffix(amount / entries)}"
+        )
+    )
+
     await message.edit(embed=embed, view=None)
 
 crash_info = {}
